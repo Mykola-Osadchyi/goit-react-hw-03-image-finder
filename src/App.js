@@ -7,20 +7,22 @@ import ImageGallery from './components/ImageGallery/ImageGallery';
 
 class App extends Component {
   state = {
-    searchData: '',
+    searchQuery: '',
+    pageNumber: 1,
   };
 
-  handleFormSubmit = searchData => {
-    this.setState({ searchData });
+  handleFormSubmit = data => {
+    this.setState({ searchQuery: data.search });
   };
-
-  componentDidMount() {}
 
   render() {
     return (
       <Container>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery searchData={this.state.searchData} />
+        <ImageGallery
+          searchData={this.state.searchQuery}
+          pageNumber={this.state.pageNumber}
+        />
         <ToastContainer />
       </Container>
     );

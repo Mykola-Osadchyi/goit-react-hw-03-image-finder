@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-// import s from './ImageGalleryItem.module.css';
-// import Modal from '../Modal/Modal';
+import Modal from '../Modal/Modal';
 
 export class ImageGalleryItem extends Component {
   state = {
@@ -14,15 +13,18 @@ export class ImageGalleryItem extends Component {
   };
 
   render() {
-    const { imageUrl, imageAlt } = this.props;
+    const { imageUrl, imageAlt, imageForModal } = this.props;
     return (
       <>
-        {/* {this.state.showModal && <Modal />} */}
+        {this.state.showModal && (
+          <Modal onClose={this.toggleModal} image={imageForModal} />
+        )}
         <li className="ImageGalleryItem">
           <img
             src={imageUrl}
             alt={imageAlt}
             className="ImageGalleryItem-image"
+            onClick={this.toggleModal}
           />
         </li>
       </>
@@ -33,6 +35,7 @@ export class ImageGalleryItem extends Component {
 ImageGalleryItem.propTypes = {
   imageUrl: PropTypes.string.isRequired,
   imageAlt: PropTypes.string.isRequired,
+  imageForModal: PropTypes.string.isRequired,
 };
 
 export default ImageGalleryItem;
