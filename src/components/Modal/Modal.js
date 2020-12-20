@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 import './Modal.css';
 
 const modalRoot = document.querySelector('#modal-root');
@@ -29,10 +30,15 @@ export default class Modal extends Component {
     return createPortal(
       <div className="Overlay" onClick={this.handleBackdropClick}>
         <div className="Modal">
-          <img src={this.props.image} alt="full size" />
+          <img src={this.props.image} alt="fullscreen size" />
         </div>
       </div>,
       modalRoot,
     );
   }
 }
+
+Modal.propTypes = {
+  image: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
+};

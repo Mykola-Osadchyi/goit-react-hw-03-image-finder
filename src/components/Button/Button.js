@@ -1,31 +1,16 @@
-// При нажатии на кнопку Load more должна догружаться
-// следующая порция изображений и рендериться вместе с предыдущими.
-// После загрузки и рендера новой партии изображений страница должна плавно скролиться.
-// Для скрола используй следующий код.
+// import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-// window.scrollTo({
-//   top: document.documentElement.scrollHeight,
-//   behavior: 'smooth',
-// });
+const Button = ({ click }) => {
+  return (
+    <button type="button" className="Button" onClick={click}>
+      Load more
+    </button>
+  );
+};
 
-// export const functionName = params => {
-//   return (
-//     <button onClick={this.loadMore} type="button" className="Button">
-//       Load more
-//     </button>
-//   );
-// };
-
-import React, { Component } from 'react';
-
-export class Button extends Component {
-  render() {
-    return (
-      <button type="button" className="Button" onClick={this.props.click}>
-        Load more
-      </button>
-    );
-  }
-}
+Button.propTypes = {
+  click: PropTypes.func.isRequired,
+};
 
 export default Button;

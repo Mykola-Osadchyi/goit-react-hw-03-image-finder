@@ -9,10 +9,18 @@ class App extends Component {
   state = {
     searchQuery: '',
     pageNumber: 1,
+    images: [],
+    gallery: [],
+    error: null,
+    status: 'resolved',
+    galleryPage: 1,
+    showBtn: false,
   };
 
   handleFormSubmit = data => {
-    this.setState({ searchQuery: data.search });
+    this.setState({
+      searchQuery: data.search,
+    });
   };
 
   render() {
@@ -21,7 +29,8 @@ class App extends Component {
         <Searchbar onSubmit={this.handleFormSubmit} />
         <ImageGallery
           searchData={this.state.searchQuery}
-          pageNumber={this.state.pageNumber}
+          // pageNumber={this.state.pageNumber}
+          // images={this.state.images}
         />
         <ToastContainer />
       </Container>

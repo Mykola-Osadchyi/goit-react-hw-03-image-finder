@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
+// import s from './SearchBar.module.css';
 
-export class Searchbar extends Component {
+export default class Searchbar extends Component {
   state = {
     search: '',
-    // pageForFetch: 1,
+    page: 8,
+    images: [],
   };
 
   handleChange = event => {
@@ -16,7 +19,9 @@ export class Searchbar extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    if (this.state.search.trim() === '') {
+    const { search } = this.state;
+
+    if (search.trim() === '') {
       toast.info('The field is empty. Please enter a specific query.');
       return;
     }
@@ -38,8 +43,8 @@ export class Searchbar extends Component {
             type="text"
             value={this.state.search}
             onChange={this.handleChange}
-            // autocomplete="off"
-            // autofocus
+            autoComplete="off"
+            autoFocus
             placeholder="Search images and photos"
           />
         </form>
@@ -48,4 +53,6 @@ export class Searchbar extends Component {
   }
 }
 
-export default Searchbar;
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

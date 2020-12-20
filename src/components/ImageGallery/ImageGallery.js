@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import Spinner from '../Loader/Loader';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import Button from '../Button/Button';
-// import GetImages from '../GetImages/GetImages';
 
 const apiKey = '18724736-77330c9d8a28eb7073d2e9b7d';
 
@@ -19,15 +18,17 @@ export class ImageGallery extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.searchData !== this.props.searchData) {
-      this.setState({ status: 'pending' });
-
+      this.setState({
+        status: 'pending',
+        // galleryPage: this.props.pageNumber,
+        // gallery: [],
+      });
       this.getImages();
     }
   }
 
   getImages = () => {
-    const searchData = this.props.searchData;
-    const url = `https://pixabay.com/api/?key=${apiKey}&q=${searchData}&page=${this.props.pageNumber}&image_type=photo&orientation=horizontal&per_page=3`;
+    const url = `https://pixabay.com/api/?key=${apiKey}&q=${this.props.searchData}&page=${this.state.galleryPage}&image_type=photo&orientation=horizontal&per_page=4`;
     fetch(url)
       .then(response => {
         if (response.ok) {
@@ -38,49 +39,37 @@ export class ImageGallery extends Component {
       .then(({ hits }) => {
         if (hits.length === 0) {
           toast.error('Images not found');
-          this.setState({ showBtn: false, status: 'resolved', gallery: [] });
+          this.setState({ showBtn: false, status: 'resolved' });
         } else {
-          this.setState({
-            gallery: hits,
+          this.setState(prevState => ({
+            gallery: [...prevState.gallery, ...hits],
             status: 'resolved',
             showBtn: true,
-            galleryPage: 1,
-          });
-          this.setState(prevState => ({
-            galleryPage: prevState.galleryPage + 1,
           }));
+          if (this.state.galleryPage !== 1) {
+            this.scrollToBottom();
+          }
+          this.incrementPage();
         }
       })
       .catch(error => this.setState({ error, status: 'rejected' }));
   };
 
-  getMoreImages = () => {
-    const searchData = this.props.searchData;
-    const url = `https://pixabay.com/api/?key=${apiKey}&q=${searchData}&page=${this.state.galleryPage}&image_type=photo&orientation=horizontal&per_page=12`;
-    fetch(url)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(new Error('Oops.. error'));
-      })
-      .then(({ hits }) => {
-        this.setState(prevState => ({
-          gallery: [...prevState.gallery, ...hits],
-        }));
-      })
-      .catch(error => this.setState({ error, status: 'rejected' }));
-  };
-
-  loadMoreImages = () => {
-    this.getMoreImages();
+  incrementPage = () => {
     this.setState(prevState => ({
       galleryPage: prevState.galleryPage + 1,
     }));
-    // window.scrollTo({
-    //   top: document.documentElement.scrollHeight,
-    //   behavior: 'smooth',
-    // });
+  };
+
+  loadMoreImages = () => {
+    this.getImages();
+  };
+
+  scrollToBottom = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
   };
 
   render() {
@@ -89,7 +78,7 @@ export class ImageGallery extends Component {
       return (
         <div className="spinner">
           <Spinner />
-          <div>Loading...</div>
+          <span>Loading...</span>
         </div>
       );
     }
@@ -118,10 +107,9 @@ export class ImageGallery extends Component {
   }
 }
 
-// ImageGallery.propTypes = {
-//   key: PropTypes.number.isRequired,
-//   name: PropTypes.string.isRequired,
-//   isOnline: PropTypes.bool.isRequired,
-// };
+ImageGallery.propTypes = {
+  searchData: PropTypes.string.isRequired,
+  // pageNumber: PropTypes.number.isRequired,
+};
 
 export default ImageGallery;
