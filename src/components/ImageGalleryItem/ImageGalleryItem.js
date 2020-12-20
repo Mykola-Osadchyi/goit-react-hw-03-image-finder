@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-
 import PropTypes from 'prop-types';
 import Modal from '../Modal/Modal';
+import s from './ImageGalleryItem.module.css';
 
 export class ImageGalleryItem extends Component {
   state = {
@@ -19,11 +19,11 @@ export class ImageGalleryItem extends Component {
         {this.state.showModal && (
           <Modal onClose={this.toggleModal} image={imageForModal} />
         )}
-        <li className="ImageGalleryItem">
+        <li className={s.ImageGalleryItem}>
           <img
             src={imageUrl}
             alt={imageAlt}
-            className="ImageGalleryItem-image"
+            className={s.ImageGalleryItem_image}
             onClick={this.toggleModal}
           />
         </li>

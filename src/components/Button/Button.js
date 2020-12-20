@@ -1,9 +1,9 @@
-// import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import s from './Button.module.css';
 
 const Button = ({ click }) => {
   return (
-    <button type="button" className="Button" onClick={click}>
+    <button type="button" className={s.Button} onClick={click}>
       Load more
     </button>
   );

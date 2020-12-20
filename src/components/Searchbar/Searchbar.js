@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
-// import s from './SearchBar.module.css';
+import s from './Searchbar.module.css';
 
 export default class Searchbar extends Component {
   state = {
     search: '',
-    page: 8,
-    images: [],
   };
 
   handleChange = event => {
@@ -18,28 +16,25 @@ export default class Searchbar extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-
     const { search } = this.state;
-
     if (search.trim() === '') {
       toast.info('The field is empty. Please enter a specific query.');
       return;
     }
-
     this.props.onSubmit(this.state);
     this.setState({ search: '' });
   };
 
   render() {
     return (
-      <header className="Searchbar">
-        <form className="SearchForm" onSubmit={this.handleSubmit}>
-          <button type="submit" className="SearchForm-button">
-            <span className="SearchForm-button-label">Search</span>
+      <header className={s.Searchbar}>
+        <form className={s.SearchForm} onSubmit={this.handleSubmit}>
+          <button type="submit" className={s.SearchForm_button}>
+            <span className={s.SearchForm_button_label}>Search</span>
           </button>
 
           <input
-            className="SearchForm-input"
+            className={s.SearchForm_input}
             type="text"
             value={this.state.search}
             onChange={this.handleChange}
