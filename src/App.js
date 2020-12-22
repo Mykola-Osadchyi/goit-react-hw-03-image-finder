@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import fetchImages from './services/imagesApi';
 import Container from './components/Container/Container';
 import Searchbar from './components/Searchbar/Searchbar';
 import ImageGallery from './components/ImageGallery/ImageGallery';
@@ -17,7 +18,7 @@ class App extends Component {
     error: null,
     status: 'idle',
     isLoading: false,
-    apiKey: '18724736-77330c9d8a28eb7073d2e9b7d',
+    // apiKey: '18724736-77330c9d8a28eb7073d2e9b7d',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -28,22 +29,16 @@ class App extends Component {
       });
       this.getImages();
     }
-    if (this.state.pageNumber !== prevState.pageNumber) {
+    if (this.state.pageNumber > prevState.pageNumber) {
       this.getImages();
     }
   }
 
   getImages = () => {
-    const { apiKey, searchQuery, pageNumber } = this.state;
+    const { searchQuery, pageNumber } = this.state;
     this.setState({ isLoading: true, showBtn: false });
-    const url = `https://pixabay.com/api/?key=${apiKey}&q=${searchQuery}&page=${pageNumber}&image_type=photo&orientation=horizontal&per_page=12`;
-    fetch(url)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(new Error('Oops.. error'));
-      })
+
+    fetchImages(searchQuery, pageNumber)
       .then(({ hits }) => {
         if (hits.length === 0) {
           toast.error('Images not found or no more images');
