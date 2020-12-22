@@ -16,6 +16,7 @@ class App extends Component {
     showBtn: false,
     error: null,
     status: 'idle',
+    isLoading: false,
     apiKey: '18724736-77330c9d8a28eb7073d2e9b7d',
   };
 
@@ -27,13 +28,14 @@ class App extends Component {
       });
       this.getImages();
     }
-    if (this.state.pageNumber > prevState.pageNumber) {
+    if (this.state.pageNumber !== prevState.pageNumber) {
       this.getImages();
     }
   }
 
   getImages = () => {
     const { apiKey, searchQuery, pageNumber } = this.state;
+    this.setState({ isLoading: true, showBtn: false });
     const url = `https://pixabay.com/api/?key=${apiKey}&q=${searchQuery}&page=${pageNumber}&image_type=photo&orientation=horizontal&per_page=12`;
     fetch(url)
       .then(response => {
@@ -44,13 +46,17 @@ class App extends Component {
       })
       .then(({ hits }) => {
         if (hits.length === 0) {
-          toast.error('Images not found');
-          this.setState({ showBtn: false, status: 'resolved' });
+          toast.error('Images not found or no more images');
+          this.setState({
+            status: 'resolved',
+            isLoading: false,
+          });
         } else {
           this.setState(prevState => ({
             images: [...prevState.images, ...hits],
             status: 'resolved',
             showBtn: true,
+            isLoading: false,
           }));
           if (this.state.pageNumber !== 1) {
             this.scrollToBottom();
@@ -96,7 +102,6 @@ class App extends Component {
           <Searchbar onSubmit={this.handleFormSubmit} />
           <div className="spinner">
             <Spinner />
-            <span>Loading...</span>
           </div>
         </Container>
       );
@@ -114,6 +119,11 @@ class App extends Component {
         <Container>
           <Searchbar onSubmit={this.handleFormSubmit} />
           <ImageGallery images={images} />
+          {this.state.isLoading && (
+            <div className="spinner">
+              <Spinner />
+            </div>
+          )}
           {this.state.showBtn && <Button click={this.incrementPage} />}
           <ToastContainer />
         </Container>
